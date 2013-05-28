@@ -12,6 +12,7 @@ In addition to Python v 2.7.2 you will need the additional python packages, list
 | dnspython                          | [http://www.dnspython.org/](http://www.dnspython.org/)                                                                         |
 | chromium-compact-language-detector | [https://code.google.com/p/chromium-compact-language-detector/](https://code.google.com/p/chromium-compact-language-detector/) |
 | fish                               | [https://pypi.python.org/pypi/fish](https://pypi.python.org/pypi/fish)                                                         |
+| mechanize                          | [http://wwwsearch.sourceforge.net/mechanize/](http://wwwsearch.sourceforge.net/mechanize/)                                     |
 
 #Installation
 You need to get an API Key from Trello that does not expire - you can always deleted - visit [https://trello.com/1/appKey/generate](https://trello.com/1/appKey/generate)
