@@ -6,15 +6,33 @@ import urllib2
 import BeautifulSoup
 import csv
 import re
+import mechanize
+import twill
+import twill.commands
+from urlparse import urlparse
+
 from fish import ProgressFish
+
 
 user_agent = ('Mozilla/5.0 (X11; U; Linux i686)'
                 'Gecko/20071127 Firefox/2.0.0.11')
+
+opener = urllib2.build_opener()
+opener.addheaders = [('User-agent', user_agent)]
 auth = TrelloClient(os.environ['TRELLO_API_KEY'], os.environ['TRELLO_TOKEN'])
 
 gca_board = auth.get_board('4f199b088ab038761f17b066')
 
 gca_lists = gca_board.all_lists()
+
+t_com = twill.commands
+## get the default browser
+t_brw = t_com.get_browser()
+br = mechanize.Browser()
+#Deal with Redirects etc...
+def get_site(chapter_url):
+    br.open(chapter_url)
+    return br.geturl()
 
 total_sites = None
 chapters_to_check = []
@@ -49,13 +67,13 @@ sites_with_no_links_back = []
 fish = ProgressFish(total=len(chapters_with_web_sites))
 for i, c in enumerate(chapters_with_web_sites):
     req = c['urls'][0]
+    url = get_site(req)
+    print url
     try:
-        doc = urllib2.urlopen(req)
+        doc = opener.open(req)
         fish.animate(amount=i)
     except urllib2.URLError, e:
         continue
-    #print '==========='
-    #print req
     soup = BeautifulSoup.BeautifulSoup(doc)
     try:
         href = soup.findAll('a', {'href': 'http://www.thezeitgeistmovement.com'})
@@ -66,6 +84,11 @@ for i, c in enumerate(chapters_with_web_sites):
     except:
         continue
 
+    # see what the website is running
+    
+    # About section
+    #try:
+    #    about = soup.findAll('about')
 # clrd detection requires a certain amount of string, sentances to determine language
 print 'Currently we have to check %s ' % total_sites
 print '=============='
@@ -83,3 +106,5 @@ for site in chapters_to_check:
     print site
     
 print 'Total sites checked %s' % (len(sites_with_no_links_back) + len(sites_with_links_back) + len(chapters_to_check))
+
+#Utils
